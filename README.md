@@ -48,3 +48,74 @@ window.unionpay.pay(tn, function (msg) {
     // ...
 });
 ```
+
+## 缺少的一个步骤：偷偷地从别人的一个服务器获得一个测试tn
+允许发起http request
+``` html
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://101.231.204.84:*">
+```
+
+修改JS代码，从一个url来动态获取一个tn
+``` javascript
+var app = {
+    // Application Constructor
+    initialize: function() {
+        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    },
+
+    // deviceready Event Handler
+    //
+    // Bind any cordova events here. Common events are:
+    // 'pause', 'resume', etc.
+    onDeviceReady: function() {
+        
+        alert('hahaha');
+        var txt = document.getElementById("txt1");
+        document.getElementById("myBtn").addEventListener("click",function(){
+            MyCordovaPlugin.getDate(function(res){
+               txt.value = res;
+            });
+        },false);
+
+        document.getElementById("myBtnPay").addEventListener("click",function(){
+            var url = "http://101.231.204.84:8091/sim/getacptn";
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() { 
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200){
+                    var tn = xmlHttp.responseText;
+                    txt.value = tn;
+                    unionpay.pay(tn, function (msg) {
+                        // Payment was successful, do something
+                        // ...
+                        alert('successful');
+                    }, function (error) {
+                        // Payment was failed, do something
+                        // ...
+                        alert('failed');
+                    });
+                }
+            }
+            xmlHttp.open("GET", url, true); // true for asynchronous 
+            xmlHttp.send(null);
+            
+        },false);
+        
+        this.receivedEvent('deviceready');
+    },
+
+    // Update DOM on a Received Event
+    receivedEvent: function(id) {
+        var parentElement = document.getElementById(id);
+        var listeningElement = parentElement.querySelector('.listening');
+        var receivedElement = parentElement.querySelector('.received');
+
+        listeningElement.setAttribute('style', 'display:none;');
+        receivedElement.setAttribute('style', 'display:block;');
+
+        console.log('Received Event: ' + id);
+    }
+};
+
+app.initialize();
+```
+
