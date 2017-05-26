@@ -50,7 +50,7 @@ window.unionpay.pay(tn, function (msg) {
 ```
 
 ## 缺少的一个步骤：偷偷地从别人的一个服务器获得一个测试tn
-允许发起http request
+修改index.html文件，允许发起http request
 ``` html
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://101.231.204.84:*">
 ```
@@ -119,3 +119,14 @@ var app = {
 app.initialize();
 ```
 
+## 测试银行账号
+测试账号	测试信息
+姓名	张三
+手机号码	18100000000
+证件类型	01身份证
+CVN2	248
+有效期	1219
+证件号	510265790128303
+华夏银行贷记卡	6226388000000095
+密码	111101
+验证码	123456（先点获取验证码之后再输入）
