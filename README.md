@@ -2,6 +2,8 @@
 
 Cordova plugin for Unionpay, supports **iOS** and **Android**.
 
+最下面有一部分**good practice**
+
 ## Installation
 
 ```
